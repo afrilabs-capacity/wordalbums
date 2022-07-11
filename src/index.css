@@ -1,13 +1,37 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://use.fontawesome.com/releases/v5.13.0/css/all.css");
+
+body{
+    background-color:#000000;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.rpv-core__icon {
+    fill: white!important;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1;
+    text-align: center;
+}
+
+.rpv-core__minimal-button{
+    color:white;
+    fill: white;
+
+}
+
+
+.rpv-zoom__popover-target{
+     color:white;
+}
+
+
+.rpv-zoom__popover-target-scale,.rpv-zoom__popover-target-scale--ltr{
+ color:white;
+}
+
+.rpv-zoom__popover-target-arrow{
+ color:white;
 }
