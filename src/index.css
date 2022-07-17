@@ -3,8 +3,8 @@
 @tailwind utilities;
 @import url("https://use.fontawesome.com/releases/v5.13.0/css/all.css");
 
-body{
-    background-color:#000000;
+input[type="file"] {
+width: 90px; /* Keep it under 100px in order to hide the unwanted text. */
 }
 
 .rpv-core__icon {

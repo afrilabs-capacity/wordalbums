@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://use.fontawesome.com/releases/v5.13.0/css/all.css");
+
+body{
+    background-color:#000000;
+}
+
