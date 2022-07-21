@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Publishers from "..";
 import AdInsertModal from "../../../modals/ad-insert-modal";
+import AdEditModal from "../../../modals/ad-edit-modal";
 import { useBookStore } from "../../../stores/book-store";
 
 export default function Book() {
@@ -13,6 +14,7 @@ export default function Book() {
   const [publication, setPublication] = useState();
   const [previewMode, setPreviewMode] = useState(false);
   const [showAdModal, setShowAdModal] = useState(false);
+  const [showAdEditModal, setShowAdEditModal] = useState(false);
   const [currentEditingPageAd, setCurrentEditingPageAd] = useState();
   const [currentEditingAdId, setcurrentEditingAdId] = useState();
   //   const { pageAdvertId, setpageAdvertId } = useBookStore((state) => state);
@@ -76,6 +78,20 @@ export default function Book() {
     setcurrentEditingAdId(null);
   };
 
+  const showEditAdBox = (page) => {
+    setShowAdEditModal(true);
+    setCurrentEditingPageAd(page);
+    setcurrentEditingAdId(page.adverts[0].uuid);
+    // alert(page.adverts[0].uuid);
+  };
+
+  const hideEditAdBox = () => {
+    setShowAdEditModal(false);
+    setCurrentEditingPageAd(null);
+    setcurrentEditingAdId("");
+    // alert(page.adverts[0].uuid);
+  };
+
   const hideAdBox = () => {
     setShowAdModal(false);
     setCurrentEditingPageAd(null);
@@ -94,6 +110,40 @@ export default function Book() {
         if (response.status == 200) {
           getPublication();
           hideAdBox();
+        }
+      })
+      .catch((error) => {
+        alert(error.message);
+        console.error("There was an error!", error);
+      });
+  };
+
+  const updateAd = () => {
+    const url = "/api/page/advert/update";
+    axios
+      .post(url, {
+        page: currentEditingPageAd.id,
+        ad_id: currentEditingAdId,
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          getPublication();
+          hideEditAdBox();
+        }
+      })
+      .catch((error) => {
+        alert(error.message);
+        console.error("There was an error!", error);
+      });
+  };
+
+  const deleteAd = (page) => {
+    const url = "/api/page/advert/delete/" + page.id;
+    axios
+      .delete(url)
+      .then((response) => {
+        if (response.status == 200) {
+          getPublication();
         }
       })
       .catch((error) => {
@@ -321,20 +371,24 @@ export default function Book() {
                               <div
                                 className="bg-white rounded rounded-full bg-white p-0  right-0 absolute px-1 cursor-pointer"
                                 style={{ top: -13 }}
-                                onClick={() => deletePage(page)}
+                                onClick={() => deleteAd(page)}
                               >
                                 <i class="fa fa-times-circle text-red-500  z-50 text-2xl"></i>
                               </div>
                             ) : (
                               ""
                             )}
-                            <div
-                              className="bg-white rounded rounded-full bg-white p-0  right-0 absolute px-1 cursor-pointer"
-                              style={{ top: -13, right: 40 }}
-                              onClick={() => deletePage(page)}
-                            >
-                              <i class="fa fa-edit text-blue-500  z-50 text-2xl"></i>
-                            </div>
+                            {page.adverts.length ? (
+                              <div
+                                className="bg-white rounded rounded-full bg-white p-0  right-0 absolute px-1 cursor-pointer"
+                                style={{ top: -13, right: 40 }}
+                                onClick={() => showEditAdBox(page)}
+                              >
+                                <i class="fa fa-edit text-blue-500  z-50 text-2xl"></i>
+                              </div>
+                            ) : (
+                              ""
+                            )}
                             <div className="">
                               {!page.adverts.length ? (
                                 <BasicButton
@@ -388,6 +442,13 @@ export default function Book() {
         modalOpen={showAdModal}
         hideAdModal={hideAdBox}
         saveAdvert={saveAd}
+        handleAdIdChange={handleAdIdChange}
+        value={currentEditingAdId}
+      />
+      <AdEditModal
+        modalOpen={showAdEditModal}
+        hideAdModal={hideEditAdBox}
+        updateAdvert={updateAd}
         handleAdIdChange={handleAdIdChange}
         value={currentEditingAdId}
       />

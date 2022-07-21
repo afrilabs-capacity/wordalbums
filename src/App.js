@@ -20,6 +20,7 @@ function App() {
   return (
     <Routes>
       <Route path="/reader/:uuid" element={<Reader />} />
+      <Route path="/reader/:uuid/:pageuuid" element={<Reader />} />
       <Route path="/dashboard" element={<Master component={<Dashboard />} />} />
       <Route
         exact
