@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, forwardRef } from "react";
 import "../reader.css";
 import { Document, Page, pdfjs } from "react-pdf";
 import BasicButton from "../components/buttons/basic-button";
+
 import {
   RenderCurrentScaleProps,
   RenderZoomInProps,
@@ -19,6 +20,7 @@ import { useSwipeable } from "react-swipeable";
 import SavePageModal from "../modals/save-page-modal";
 import uniqueId from "react-uuid";
 import axios from "axios";
+import { API_BASE } from "../Utils/helpers";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 function Reader() {
@@ -65,7 +67,7 @@ function Reader() {
   let { pageuuid } = useParams();
   let bookPagesWithAds = [];
   const getBook = () => {
-    const url = "/api/book/" + uuid;
+    const url = API_BASE + "/api/book/" + uuid;
     axios
       .get(url)
       .then((response) => {
@@ -97,7 +99,7 @@ function Reader() {
   };
 
   const savePage = () => {
-    const url = "/api/guest/page/save";
+    const url = API_BASE + "/api/guest/page/save";
 
     localStorage.setItem("cookie_id", uniqueId());
     const cookieId = localStorage.getItem("cookie_id");
@@ -125,7 +127,7 @@ function Reader() {
     const cookieId = localStorage.getItem("cookie_id");
     if (pageuuid && cookieId) {
       // alert("hi");
-      const url = `/api/page/${pageuuid}/cookieId/${cookieId}`;
+      const url = `${API_BASE}/api/page/${pageuuid}/cookieId/${cookieId}`;
 
       axios
         .get(url)

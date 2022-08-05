@@ -3,7 +3,12 @@ import StripeCheckout from "react-stripe-checkout";
 import "react-toastify/dist/ReactToastify.css";
 import { useState, useEffect } from "react";
 import BasicButton from "../components/buttons/basic-button";
-import { authToken, authUserData, isAuthUser } from "../Utils/helpers";
+import {
+  authToken,
+  authUserData,
+  isAuthUser,
+  API_BASE,
+} from "../Utils/helpers";
 import axios from "axios";
 
 function StripeDonateForm({ book, amount, action }) {
@@ -21,7 +26,7 @@ function StripeDonateForm({ book, amount, action }) {
     const response = await axios.request({
       method: "post",
       headers: headers,
-      url: "/api/stripe/charge/donation",
+      url: API_BASE + "/api/stripe/charge/donation",
       data: {
         token,
         product,

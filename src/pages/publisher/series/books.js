@@ -2,7 +2,7 @@ import TextField from "../../../components/inputs/text-input";
 import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { isAdmin } from "../../../Utils/helpers";
+import { isAdmin, API_BASE } from "../../../Utils/helpers";
 import EditBookModal from "../../../modals/edit-book-modal";
 import axios from "axios";
 import Publishers from "..";
@@ -16,7 +16,7 @@ export default function Books() {
   let { userId } = useParams();
   let { seriesId } = useParams();
   const getPublication = () => {
-    const url = "/api/series/" + seriesId + "/publisher/" + userId;
+    const url = API_BASE + "/api/series/" + seriesId + "/publisher/" + userId;
     axios
       .get(url)
       .then((response) => {
@@ -45,7 +45,7 @@ export default function Books() {
   // ,,,,
 
   const deleteBook = (book) => {
-    const url = "/api/book/delete/" + book.uuid;
+    const url = API_BASE + "/api/book/delete/" + book.uuid;
     axios
       .delete(url)
       .then((response) => {

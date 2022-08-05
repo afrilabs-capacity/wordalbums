@@ -2,7 +2,7 @@ import TextField from "../../../components/inputs/text-input";
 import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { isAdmin } from "../../../Utils/helpers";
+import { isAdmin, API_BASE } from "../../../Utils/helpers";
 import axios from "axios";
 export default function Series() {
   const [name, setName] = useState("");
@@ -11,7 +11,7 @@ export default function Series() {
 
   let { userId } = useParams();
   const getPublications = () => {
-    const url = "/api/publisher-publications/" + userId;
+    const url = API_BASE + "/api/publisher-publications/" + userId;
     axios
       .get(url)
       .then((response) => {

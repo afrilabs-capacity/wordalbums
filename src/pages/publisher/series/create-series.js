@@ -2,7 +2,7 @@ import TextField from "../../../components/inputs/text-input";
 import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { isAdmin } from "../../../Utils/helpers";
+import { isAdmin, API_BASE } from "../../../Utils/helpers";
 import axios from "axios";
 export default function CreateSeries() {
   const [name, setName] = useState("");
@@ -10,7 +10,7 @@ export default function CreateSeries() {
   const [publisherId, setPublisherId] = useState("");
   const [fileSelected, setFileSelected] = useState("");
 
-  const url = "/api/series-create";
+  const url = API_BASE + "/api/series-create";
   let { userId } = useParams();
   const previewImageRef = useRef();
   const addPublisher = () => {

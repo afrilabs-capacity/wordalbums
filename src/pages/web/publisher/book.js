@@ -7,13 +7,14 @@ import AdInsertModal from "../../../modals/ad-insert-modal";
 import AdEditModal from "../../../modals/ad-edit-modal";
 import InformationPageModal from "../../../modals/information-page-modal";
 import WebHeader from "../header";
+import { API_BASE } from "../../../Utils/helpers";
 
 export default function WebBook() {
   const [book, setBook] = useState();
 
   let { bookuuid } = useParams();
   const getBook = () => {
-    const url = "/api/book/" + bookuuid;
+    const url = API_BASE + "/api/book/" + bookuuid;
     axios
       .get(url)
       .then((response) => {

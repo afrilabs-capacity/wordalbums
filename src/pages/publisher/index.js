@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import BasicButton from "../../components/buttons/basic-button";
-import { isAdmin } from "../../Utils/helpers";
+import { isAdmin, API_BASE } from "../../Utils/helpers";
 export default function Publishers() {
   const [publishers, setPublishers] = useState([]);
-  const url = "/api/publishers";
+  const url = API_BASE + "/api/publishers";
   const getPublishers = () => {
     axios
       .post(url)

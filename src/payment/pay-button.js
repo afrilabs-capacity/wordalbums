@@ -3,7 +3,7 @@ import StripeCheckout from "react-stripe-checkout";
 import "react-toastify/dist/ReactToastify.css";
 import { useState, useEffect } from "react";
 import BasicButton from "../components/buttons/basic-button";
-import { authToken, authUserData } from "../Utils/helpers";
+import { authToken, authUserData, API_BASE } from "../Utils/helpers";
 import axios from "axios";
 
 function StripeForm({ book, action }) {
@@ -22,7 +22,7 @@ function StripeForm({ book, action }) {
     const response = await axios.request({
       method: "post",
       headers: headers,
-      url: "/api/stripe/charge",
+      url: API_BASE + "/api/stripe/charge",
       data: {
         token,
         product,

@@ -3,13 +3,13 @@ import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import TextArea from "../../../components/inputs/text-area";
-import { isAdmin } from "../../../Utils/helpers";
+import { isAdmin, API_BASE } from "../../../Utils/helpers";
 import axios from "axios";
 export default function CreateAdvert() {
   const [name, setName] = useState("");
   const [data, setData] = useState("");
 
-  const url = "/api/advert-create";
+  const url = API_BASE + "/api/advert-create";
   const addAdvert = () => {
     let formData = new FormData();
     formData.append("name", name);

@@ -2,7 +2,7 @@ import TextField from "../../../components/inputs/text-input";
 import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { isAdmin } from "../../../Utils/helpers";
+import { isAdmin, API_BASE } from "../../../Utils/helpers";
 import axios from "axios";
 export default function CreatePage() {
   const [name, setName] = useState("");
@@ -12,7 +12,7 @@ export default function CreatePage() {
   const [selectedFileType, setSelectedFileType] = useState("");
   const [previewImage, setPreviewImage] = useState("");
 
-  const url = "/api/page-create";
+  const url = API_BASE + "/api/page-create";
   let { userId } = useParams();
   let { bookId } = useParams();
   let { seriesId } = useParams();

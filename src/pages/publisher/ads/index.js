@@ -3,14 +3,14 @@ import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import TextArea from "../../../components/inputs/text-area";
-import { isAdmin } from "../../../Utils/helpers";
+import { isAdmin, API_BASE } from "../../../Utils/helpers";
 import axios from "axios";
 export default function AdHome() {
   const [adverts, setAdverts] = useState([]);
   const [data, setData] = useState("");
   const [name, setName] = useState("");
   const getAds = () => {
-    const url = "/api/adverts";
+    const url = API_BASE + "/api/adverts";
     axios
       .get(url, {})
       .then((response) => {
@@ -26,7 +26,7 @@ export default function AdHome() {
   };
 
   const deleteAd = (advert) => {
-    const url = "/api/advert/delete/" + advert.id;
+    const url = API_BASE + "/api/advert/delete/" + advert.id;
     axios
       .delete(url)
       .then((response) => {

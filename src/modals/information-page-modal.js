@@ -4,6 +4,7 @@ import TermsAccordion from "../accordions/terms-accordion";
 import { useBookStore } from "../stores/book-store";
 import { forwardRef, useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
+import { API_BASE } from "../Utils/helpers";
 import axios from "axios";
 
 export default function InformationPageModal({ modalOpen, hideModal, book }) {
@@ -25,7 +26,7 @@ export default function InformationPageModal({ modalOpen, hideModal, book }) {
   const rx_live = /^[+-]?\d*(?:[.,]\d*)?$/;
   // let { userId } = useParams();
   const addInformationPage = () => {
-    const url = "/api/information-page/create-or-update";
+    const url = API_BASE + "/api/information-page/create-or-update";
     // alert(pageStart);
     let formData = new FormData();
     formData.append("release_information", releaseInformation);

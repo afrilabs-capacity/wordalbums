@@ -2,7 +2,7 @@ import TextField from "../../../components/inputs/text-input";
 import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { isAdmin } from "../../../Utils/helpers";
+import { isAdmin, API_BASE } from "../../../Utils/helpers";
 import axios from "axios";
 export default function CreateBook() {
   const [name, setName] = useState("");
@@ -11,7 +11,7 @@ export default function CreateBook() {
   const [publisherId, setPublisherId] = useState("");
   const [fileSelected, setFileSelected] = useState("");
 
-  const url = "/api/book-create";
+  const url = API_BASE + "/api/book-create";
   let { userId } = useParams();
   let { seriesId } = useParams();
   const previewImageRef = useRef();

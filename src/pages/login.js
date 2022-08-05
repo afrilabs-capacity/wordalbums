@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import WebHeader from "./web/header";
 import { isAdmin } from "../Utils/helpers";
-import { isAuthUser } from "../Utils/helpers";
+import { isAuthUser, API_BASE } from "../Utils/helpers";
 import axios from "axios";
 
 export default function Login() {
@@ -15,7 +15,7 @@ export default function Login() {
 
   const login = () => {
     setIsAuthenticating(true);
-    const url = "/api/login";
+    const url = API_BASE + "/api/login";
     axios
       .post(url, { email: email, password: password })
       .then((response) => {

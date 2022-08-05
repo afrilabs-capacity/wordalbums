@@ -6,7 +6,7 @@ import WebHeader from "./web/header";
 import axios from "axios";
 import BasicButton from "../components/buttons/basic-button";
 import StripeForm from "../payment/pay-button";
-import { isAuthUser } from "../Utils/helpers";
+import { isAuthUser, API_BASE } from "../Utils/helpers";
 
 export default function Signup() {
   const [firstName, setFirstName] = useState("");
@@ -21,7 +21,7 @@ export default function Signup() {
 
   const register = () => {
     setIsAuthenticating(true);
-    const url = "/api/register";
+    const url = API_BASE + "/api/register";
     axios
       .post(url, {
         name: firstName + " " + lastName,

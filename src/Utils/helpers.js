@@ -24,6 +24,8 @@ export function isReader() {
   return false;
 }
 
+export const API_BASE = "https://qwykit.com";
+
 export function logout() {
   localStorage.removeItem("user");
   localStorage.removeItem("token");

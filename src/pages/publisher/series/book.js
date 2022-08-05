@@ -6,7 +6,7 @@ import axios from "axios";
 import AdInsertModal from "../../../modals/ad-insert-modal";
 import AdEditModal from "../../../modals/ad-edit-modal";
 import InformationPageModal from "../../../modals/information-page-modal";
-import { isAdmin } from "../../../Utils/helpers";
+import { isAdmin, API_BASE } from "../../../Utils/helpers";
 import { toast } from "react-toastify";
 
 export default function Book() {
@@ -30,7 +30,13 @@ export default function Book() {
 
   const getPublication = () => {
     const url =
-      "/api/book/" + bookId + "/series/" + seriesId + "/publisher/" + userId;
+      API_BASE +
+      "/api/book/" +
+      bookId +
+      "/series/" +
+      seriesId +
+      "/publisher/" +
+      userId;
     axios
       .get(url)
       .then((response) => {
@@ -48,7 +54,13 @@ export default function Book() {
   const movePage = (page, direction) => {
     // alert(`${page.name} ${direction}`);
     const url =
-      "/api/page/" + page.uuid + "/book/" + book.id + "/move/" + direction;
+      API_BASE +
+      "/api/page/" +
+      page.uuid +
+      "/book/" +
+      book.id +
+      "/move/" +
+      direction;
     axios
       .get(url)
       .then((response) => {
@@ -64,7 +76,7 @@ export default function Book() {
   };
 
   const deletePage = (page) => {
-    const url = `/api/page/${page.uuid}/delete`;
+    const url = `${API_BASE}/api/page/${page.uuid}/delete`;
     axios
       .delete(url)
       .then((response) => {
@@ -110,7 +122,7 @@ export default function Book() {
   };
 
   const saveAd = () => {
-    const url = "/api/page/advert/";
+    const url = API_BASE + "/api/page/advert/";
     axios
       .post(url, { page: currentEditingPageAd.id, ad_id: currentEditingAdId })
       .then((response) => {
@@ -126,7 +138,7 @@ export default function Book() {
   };
 
   const updateAd = () => {
-    const url = "/api/page/advert/update";
+    const url = API_BASE + "/api/page/advert/update";
     axios
       .post(url, {
         page: currentEditingPageAd.id,
@@ -145,7 +157,7 @@ export default function Book() {
   };
 
   const deleteAd = (page) => {
-    const url = "/api/page/advert/delete/" + page.id;
+    const url = API_BASE + "/api/page/advert/delete/" + page.id;
     axios
       .delete(url)
       .then((response) => {

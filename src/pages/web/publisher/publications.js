@@ -3,6 +3,7 @@ import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import WebHeader from "../header";
+import { API_BASE } from "../../../Utils/helpers";
 import axios from "axios";
 export default function WebPublications() {
   const [name, setName] = useState("");
@@ -11,7 +12,7 @@ export default function WebPublications() {
   const [publisher, setPublisher] = useState({});
   let { uuid } = useParams();
 
-  const url = "/api/publisher/" + uuid;
+  const url = API_BASE + "/api/publisher/" + uuid;
   const getPublisher = () => {
     axios
       .get(url)

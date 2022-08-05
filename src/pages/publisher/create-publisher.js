@@ -1,13 +1,13 @@
 import TextField from "../../components/inputs/text-input";
 import BasicButton from "../../components/buttons/basic-button";
 import { useState, useEffect } from "react";
-import { isAdmin } from "../../Utils/helpers";
+import { isAdmin, API_BASE } from "../../Utils/helpers";
 import axios from "axios";
 export default function CreatePublisher() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
-  const url = "/api/publisher-create";
+  const url = API_BASE + "/api/publisher-create";
   const addPublisher = () => {
     axios
       .post(url, { name: name, email: email })

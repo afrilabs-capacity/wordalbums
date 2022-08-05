@@ -26,6 +26,7 @@ import { useSwipeable } from "react-swipeable";
 import SavePageModal from "../modals/save-page-modal";
 import RegistrationModal from "../modals/registration-modal";
 import uniqueId from "react-uuid";
+import { API_BASE } from "../Utils/helpers";
 import axios from "axios";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -73,7 +74,7 @@ function WebReader() {
   let { pageuuid } = useParams();
   let bookPagesWithAds = [];
   const getBook = () => {
-    const url = "/api/book/" + uuid;
+    const url = API_BASE + "/api/book/" + uuid;
     axios
       .get(url)
       .then((response) => {
@@ -220,7 +221,7 @@ function WebReader() {
   };
 
   const savePage = () => {
-    const url = "/api/guest/page/save";
+    const url = API_BASE + "/api/guest/page/save";
 
     localStorage.setItem("cookie_id", uniqueId());
     const cookieId = localStorage.getItem("cookie_id");
@@ -247,7 +248,7 @@ function WebReader() {
     const cookieId = localStorage.getItem("cookie_id");
     if ((pageuuid && cookieId) || (pageuuid && noAdMode)) {
       // alert(pageuuid);
-      const url = `/api/page/${pageuuid}/cookieId/${cookieId}`;
+      const url = `${API_BASE}/api/page/${pageuuid}/cookieId/${cookieId}`;
 
       if (pageuuid && noAdMode) {
         if (views.length) {

@@ -1,6 +1,6 @@
 import BasicButton from "./components/buttons/basic-button";
 import PlatformUpdateModal from "./modals/platform-updates-modal";
-import { authUserData, isAuthUser, isAdmin } from "./Utils/helpers";
+import { authUserData, isAuthUser, isAdmin, API_BASE } from "./Utils/helpers";
 import { useState, useEffect } from "react";
 import WebHeader from "./pages/web/header";
 import axios from "axios";
@@ -14,7 +14,7 @@ export const PageHeader = () => {
   const [books, setBooks] = useState([]);
 
   const getPublishers = () => {
-    const url = "/api/publishers";
+    const url = API_BASE + "/api/publishers";
     axios
       .post(url)
       .then((response) => {
@@ -29,7 +29,7 @@ export const PageHeader = () => {
   };
 
   const getBooks = () => {
-    const url = "/api/books";
+    const url = API_BASE + "/api/books";
     axios
       .get(url)
       .then((response) => {

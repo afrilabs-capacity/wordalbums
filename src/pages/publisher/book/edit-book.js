@@ -2,7 +2,7 @@ import TextField from "../../../components/inputs/text-input";
 import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { isAdmin } from "../../../Utils/helpers";
+import { isAdmin, API_BASE } from "../../../Utils/helpers";
 import { toast } from "react-toastify";
 import axios from "axios";
 export default function EditBook({ book, action }) {
@@ -13,7 +13,7 @@ export default function EditBook({ book, action }) {
   const [fileSelected, setFileSelected] = useState("");
   const [shouldDeleteCoverPhoto, setShouldDeleteCoverPhoto] = useState(0);
 
-  const url = "/api/book/update";
+  const url = API_BASE + "/api/book/update";
   let { userId } = useParams();
   let { seriesId } = useParams();
   const previewImageRef = useRef();

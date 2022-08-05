@@ -3,7 +3,7 @@ import BasicButton from "../components/buttons/basic-button";
 import TermsAccordion from "../accordions/terms-accordion";
 import { useBookStore } from "../stores/book-store";
 import { forwardRef, useState, useEffect } from "react";
-import { isAuthUser, authUserData } from "../Utils/helpers";
+import { isAuthUser, authUserData, API_BASE } from "../Utils/helpers";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -13,7 +13,7 @@ export default function PlatformUpdateModal({ modalOpen, hideModal, type }) {
   const [email, setEmail] = useState("");
 
   const subscribe = () => {
-    const url = "/api/subscription/create";
+    const url = API_BASE + "/api/subscription/create";
     axios
       .post(url, {
         email: email,
