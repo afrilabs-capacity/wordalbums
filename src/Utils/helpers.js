@@ -24,7 +24,7 @@ export function isReader() {
   return false;
 }
 
-export const API_BASE = "https://qwykit.com";
+export const API_BASE = "https://wordalbums1.test";
 
 export function logout() {
   localStorage.removeItem("user");
