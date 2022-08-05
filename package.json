@@ -2,7 +2,7 @@
   "name": "word-albums1",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://qwykit.com/",
+  "proxy": "/var/www/qwykit.com/wordalbums-server/public/",
   "dependencies": {
     "@react-pdf-viewer/core": "^3.6.0",
     "@react-pdf-viewer/zoom": "^3.6.0",
