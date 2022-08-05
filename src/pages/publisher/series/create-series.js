@@ -2,6 +2,7 @@ import TextField from "../../../components/inputs/text-input";
 import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { isAdmin } from "../../../Utils/helpers";
 import axios from "axios";
 export default function CreateSeries() {
   const [name, setName] = useState("");
@@ -63,7 +64,12 @@ export default function CreateSeries() {
     setName(name);
   };
 
-  useEffect(() => setPublisherId(userId), []);
+  useEffect(() => {
+    setPublisherId(userId);
+    if (!isAdmin()) {
+      window.location.href = "/";
+    }
+  }, []);
   return (
     <>
       <div className="bg-white m-2 p-2 flex justify-between shadow">

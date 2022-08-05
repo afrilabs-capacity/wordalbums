@@ -2,6 +2,7 @@ import TextField from "../../../components/inputs/text-input";
 import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { isAdmin } from "../../../Utils/helpers";
 import axios from "axios";
 export default function Series() {
   const [name, setName] = useState("");
@@ -27,15 +28,18 @@ export default function Series() {
 
   useEffect(() => {
     getPublications();
+    if (!isAdmin()) {
+      window.location.href = "/";
+    }
   }, []);
   return (
     <>
-      <div className="bg-white m-2 p-2 flex justify-between shadow">
+      <div className="bg-white m-2 p-2 flex flex-col md:flex-row justify-center md:justify-between shadow">
         <div>
           <h1 className="text-2xl text-center font-bold">Series</h1>
         </div>
         <div>
-          <nav class="flex" aria-label="Breadcrumb">
+          <nav class="flex justify-center" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
               <li class="inline-flex items-center">
                 <a
@@ -98,7 +102,7 @@ export default function Series() {
           </nav>
         </div>
 
-        <div>
+        <div className="flex flex-col md:flex-row justify-center gap-4">
           <BasicButton
             classes={"mr-2"}
             title={"Go Back"}
@@ -106,7 +110,7 @@ export default function Series() {
           />
           <a href={`/publisher/create-series/${userId}`}>
             <BasicButton
-              classes={"bg-teal-500 hover:bg-teal-400"}
+              classes={"bg-teal-500 hover:bg-teal-400 w-full"}
               title={"Create Series"}
               handleClick={null}
             />

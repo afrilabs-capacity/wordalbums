@@ -3,6 +3,7 @@ import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import TextArea from "../../../components/inputs/text-area";
+import { isAdmin } from "../../../Utils/helpers";
 import axios from "axios";
 export default function CreateAdvert() {
   const [name, setName] = useState("");
@@ -32,7 +33,11 @@ export default function CreateAdvert() {
     setData(e);
   };
 
-  //   useEffect(() => setPublisherId(userId), []);
+  useEffect(() => {
+    if (!isAdmin()) {
+      window.location.href = "/";
+    }
+  }, []);
   return (
     <>
       <div className="bg-white m-2 p-2 flex justify-between shadow">

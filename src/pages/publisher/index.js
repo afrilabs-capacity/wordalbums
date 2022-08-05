@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import BasicButton from "../../components/buttons/basic-button";
+import { isAdmin } from "../../Utils/helpers";
 export default function Publishers() {
   const [publishers, setPublishers] = useState([]);
   const url = "/api/publishers";
@@ -20,6 +21,9 @@ export default function Publishers() {
 
   useEffect(() => {
     getPublishers();
+    if (!isAdmin()) {
+      window.location.href = "/";
+    }
   }, []);
   return (
     <>
@@ -77,7 +81,7 @@ export default function Publishers() {
                       </td>
                       <td class="border border-emerald-500 px-4 py-2 text-emerald-600 font-medium">
                         <a
-                          href={`/publisher/publications/options/${publisher.id}`}
+                          href={`/publisher/publications/options/${publisher.uuid}`}
                         >
                           <BasicButton
                             classes={"bg-indigo-500 hover:bg-indigo-400"}

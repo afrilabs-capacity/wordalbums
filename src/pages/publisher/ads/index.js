@@ -3,6 +3,7 @@ import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import TextArea from "../../../components/inputs/text-area";
+import { isAdmin } from "../../../Utils/helpers";
 import axios from "axios";
 export default function AdHome() {
   const [adverts, setAdverts] = useState([]);
@@ -51,6 +52,9 @@ export default function AdHome() {
 
   useEffect(() => {
     getAds();
+    if (!isAdmin()) {
+      window.location.href = "/";
+    }
   }, []);
   return (
     <>

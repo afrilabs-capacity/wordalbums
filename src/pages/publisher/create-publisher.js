@@ -1,6 +1,7 @@
 import TextField from "../../components/inputs/text-input";
 import BasicButton from "../../components/buttons/basic-button";
 import { useState, useEffect } from "react";
+import { isAdmin } from "../../Utils/helpers";
 import axios from "axios";
 export default function CreatePublisher() {
   const [name, setName] = useState("");
@@ -27,7 +28,11 @@ export default function CreatePublisher() {
   const handleEmailChange = (email) => {
     setEmail(email);
   };
-  //   useEffect(() => alert(`${name} ${email}`), []);
+  useEffect(() => {
+    if (!isAdmin()) {
+      window.location.href = "/";
+    }
+  }, []);
   return (
     <>
       <h1 className="text-2xl m-2 text-center mb-4">Create Publisher</h1>

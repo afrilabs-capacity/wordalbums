@@ -3,10 +3,11 @@ import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Publishers from "..";
 import AdInsertModal from "../../../modals/ad-insert-modal";
 import AdEditModal from "../../../modals/ad-edit-modal";
-import { useBookStore } from "../../../stores/book-store";
+import InformationPageModal from "../../../modals/information-page-modal";
+import { isAdmin } from "../../../Utils/helpers";
+import { toast } from "react-toastify";
 
 export default function Book() {
   const [name, setName] = useState("");
@@ -17,11 +18,16 @@ export default function Book() {
   const [showAdEditModal, setShowAdEditModal] = useState(false);
   const [currentEditingPageAd, setCurrentEditingPageAd] = useState();
   const [currentEditingAdId, setcurrentEditingAdId] = useState();
+  const [infoPageModalOpen, setInfoPageModalOpen] = useState(false);
+  const [book, setBook] = useState();
+  const [lowestPageValue, setLowestPageValue] = useState(0);
+  const [highestPageValue, setHighestPageValue] = useState(0);
   //   const { pageAdvertId, setpageAdvertId } = useBookStore((state) => state);
 
   let { userId } = useParams();
   let { seriesId } = useParams();
   let { bookId } = useParams();
+
   const getPublication = () => {
     const url =
       "/api/book/" + bookId + "/series/" + seriesId + "/publisher/" + userId;
@@ -29,7 +35,7 @@ export default function Book() {
       .get(url)
       .then((response) => {
         if (response.status == 200) {
-          setPublication(response.data.series);
+          setBook(response.data.book);
           console.log(response.data.series);
         }
       })
@@ -41,7 +47,8 @@ export default function Book() {
 
   const movePage = (page, direction) => {
     // alert(`${page.name} ${direction}`);
-    const url = "/api/page/" + page.id + "/move/" + direction;
+    const url =
+      "/api/page/" + page.uuid + "/book/" + book.id + "/move/" + direction;
     axios
       .get(url)
       .then((response) => {
@@ -50,24 +57,24 @@ export default function Book() {
         }
       })
       .catch((error) => {
-        alert(error.message);
+        // alert(error.message);
+        toast(error.message, { type: "error" });
         console.error("There was an error!", error);
       });
   };
 
   const deletePage = (page) => {
-    const url = "/api/page/" + page.uuid;
+    const url = `/api/page/${page.uuid}/delete`;
     axios
       .delete(url)
       .then((response) => {
         if (response.status == 200) {
           getPublication();
-          //   setPublication(response.data.series);
-          //   console.log(response.data.series);
+          toast("Deleted", { type: "success" });
         }
       })
       .catch((error) => {
-        alert(error.message);
+        toast(error.message, { type: "error" });
         console.error("There was an error!", error);
       });
   };
@@ -152,22 +159,42 @@ export default function Book() {
       });
   };
 
+  const showInfoPageModal = () => {
+    setInfoPageModalOpen(true);
+  };
+
+  const hideInfoPageModal = () => {
+    setInfoPageModalOpen(false);
+  };
+
   useEffect(() => {
     getPublication();
+    if (!isAdmin()) {
+      window.location.href = "/";
+    }
   }, []);
+
+  useEffect(() => {
+    if (book && book.pages && book.pages.length) {
+      var min = Math.min(...book.pages.map((item) => item.position));
+      var max = Math.max(...book.pages.map((item) => item.position));
+      setLowestPageValue(min);
+      setHighestPageValue(max);
+    }
+  }, [book]);
   return (
     <>
-      <div className="bg-white m-2 p-2 flex md:flex-row justify-between shadow">
+      <div className="bg-white m-2 p-2 flex flex-col md:flex-row justify-center md:justify-between shadow">
         <div>
           <h1 className="text-2xl text-center font-bold">
             Book
             <span className="text-gray-500 font-normal ml-2">
-              ({publication && publication.name})
+              ({book && book.name})
             </span>
           </h1>
         </div>
         <div>
-          <nav class="flex" aria-label="Breadcrumb">
+          <nav class="flex justify-center" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
               <li class="inline-flex items-center">
                 <a
@@ -245,7 +272,7 @@ export default function Book() {
                     ></path>
                   </svg>
                   <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">
-                    {publication && publication.name}
+                    {book && book.name}
                   </span>
                 </div>
               </li>
@@ -253,65 +280,73 @@ export default function Book() {
           </nav>
         </div>
 
-        <div>
+        <div class="flex flex-col md:flex-row justify-center gap-4">
           <BasicButton
             title={"Go Back"}
             handleClick={() => window.history.back()}
           />
-          <a
-            href={`/publisher/create-page/${userId}/${
-              publication && publication.id
-            }
+
+          <BasicButton
+            classes={"bg-purple-500 hover:bg-teal-400 md:ml-2"}
+            title={"Information Page"}
+            handleClick={() => showInfoPageModal()}
+          />
+
+          <div>
+            {" "}
+            <a
+              href={`/publisher/create-page/${userId}/${book && book.id}
             `}
-          >
-            <BasicButton
-              classes={"bg-teal-500 hover:bg-teal-400 ml-2"}
-              title={"Add page"}
-              handleClick={() => null}
-            />
-          </a>
+            >
+              <BasicButton
+                classes={"bg-teal-500 hover:bg-teal-400 md:ml-2 w-full"}
+                title={"Add page"}
+                handleClick={() => null}
+              />
+            </a>
+          </div>
         </div>
       </div>
 
-      {publication && (
+      {book && (
         <div className="bg-white m-2 p-2 grid md:grid-cols-3 ">
           <div className="flex flex-col items-center">
             <img
               className="w-6/12"
               src={
                 "https://wordalbums1.test/storage/" +
-                publication.cover_photo.split("public")[1]
+                book.cover_photo.split("public")[1]
               }
             />
             <div>
               {/* <p className="text-black">Title</p> */}
-              <p className="text-black">{publication.name}</p>
+              <p className="text-black">{book.name}</p>
             </div>
             <div>
-              <a href={`/reader/${publication && publication.uuid}`}>
+              <a href={`/reader/${book && book.uuid}`}>
                 <BasicButton
                   classes={"bg-teal-500 hover:bg-teal-400 ml-2"}
-                  disabled={!publication || !publication.pages.length}
+                  disabled={!book || !book.pages.length}
                   title={"Preview Book"}
                   handleClick={null}
                 />
               </a>
             </div>
-            <p>Price: ${publication.price}</p>
+            <p>Price: ${book.price}</p>
           </div>
           <div className="col-span-2 bg-gray-50 p-2 rounded h-96 overflow-y-scroll">
             <h1 className="text-black font-bold text-2xl m-2">Pages</h1>
             <hr />
-            <div className="w-8/12 md:w-11/12">
+            <div className="w-full md:w-11/12">
               <div className="grid content-start gap-4 p-2">
-                {publication &&
-                  publication.pages.map((page, i) => {
+                {book &&
+                  book.pages.map((page, i) => {
                     return (
                       <>
                         <div className="bg-white rounded p-2 relative">
-                          <div className="flex items-center justify-between">
+                          <div className="grid md:grid-cols-6 items-center">
                             {" "}
-                            <div className="flex">
+                            <div className="flex col-span-3">
                               <div className="flex items-center">
                                 {page.file.includes("pdf") && (
                                   <img className="w-16" src={"/pdf-icon.png"} />
@@ -327,26 +362,28 @@ export default function Book() {
                                 )}
                               </div>
                               <div className="p-2">
-                                {/* <p className="font-bold text-2xl">{publication.name}</p> */}
+                                {/* <p className="font-bold text-2xl">{book.name}</p> */}
                                 <p className="text-gray-500">{page.name}</p>
                                 <p className="text-teal-500">
                                   Page {page.position}
                                 </p>
                               </div>
                             </div>
-                            <div className="p-2 text-right">
-                              {page.position !== 1 && (
+                            <div className="p-2 text-right flex col-span-3">
+                              {page.position !== lowestPageValue && (
                                 <BasicButton
-                                  classes={"bg-teal-500 hover:bg-teal-400"}
+                                  classes={
+                                    "bg-teal-500 hover:bg-teal-400 w-full"
+                                  }
                                   disabled={false}
                                   title={"Move Up"}
                                   handleClick={() => movePage(page, "up")}
                                 />
                               )}
-                              {page.position !== publication.pages.length && (
+                              {page.position !== highestPageValue && (
                                 <BasicButton
                                   classes={
-                                    "bg-teal-500 hover:bg-teal-400 ml-2 mr-1"
+                                    "bg-teal-500 hover:bg-teal-400 ml-2 mr-1 w-full"
                                   }
                                   disabled={false}
                                   title={"Move Down"}
@@ -366,7 +403,7 @@ export default function Book() {
                           </div>
                         </div>
                         {
-                          <div className="border border-dashed p-2 flex justify-center relative">
+                          <div className="border border-dashed p-2 py-6 flex justify-center relative">
                             {page.adverts.length ? (
                               <div
                                 className="bg-white rounded rounded-full bg-white p-0  right-0 absolute px-1 cursor-pointer"
@@ -434,7 +471,7 @@ export default function Book() {
         </div>{" "} */}
       </div>
       {/* <ReaderPreview
-        pages={publication && publication.pages}
+        pages={publication && book.pages}
         showModal={previewMode}
         hideModal={hidePreviewModal}
       /> */}
@@ -451,6 +488,11 @@ export default function Book() {
         updateAdvert={updateAd}
         handleAdIdChange={handleAdIdChange}
         value={currentEditingAdId}
+      />
+      <InformationPageModal
+        modalOpen={infoPageModalOpen}
+        hideModal={hideInfoPageModal}
+        book={book}
       />
     </>
   );

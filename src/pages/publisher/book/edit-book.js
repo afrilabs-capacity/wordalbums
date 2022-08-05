@@ -3,15 +3,17 @@ import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { isAdmin } from "../../../Utils/helpers";
+import { toast } from "react-toastify";
 import axios from "axios";
-export default function CreateBook() {
+export default function EditBook({ book, action }) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [coverPhoto, setCoverPhoto] = useState("mm");
+  const [coverPhoto, setCoverPhoto] = useState("");
   const [publisherId, setPublisherId] = useState("");
   const [fileSelected, setFileSelected] = useState("");
+  const [shouldDeleteCoverPhoto, setShouldDeleteCoverPhoto] = useState(0);
 
-  const url = "/api/book-create";
+  const url = "/api/book/update";
   let { userId } = useParams();
   let { seriesId } = useParams();
   const previewImageRef = useRef();
@@ -19,18 +21,20 @@ export default function CreateBook() {
     let formData = new FormData();
     formData.append("name", name);
     formData.append("price", price);
-    formData.append("user_id", publisherId);
-    formData.append("series_id", seriesId);
+    // formData.append("user_id", publisherId);
+    // formData.append("series_id", seriesId);
     formData.append("cover_photo", coverPhoto);
+    formData.append("uuid", book.uuid);
     axios
       .post(url, formData)
       .then((response) => {
         if (response.status == 200) {
-          window.location.href = `/publisher/${userId}/publications/series/${seriesId}`;
+          toast("Updated!", { type: "success" });
+          action && action();
         }
       })
       .catch((error) => {
-        alert(error.message);
+        toast("There was an error!", { type: "success" });
         console.error("There was an error!", error);
       });
   };
@@ -53,6 +57,7 @@ export default function CreateBook() {
   const removeCover = () => {
     setFileSelected("");
     setCoverPhoto("");
+    setShouldDeleteCoverPhoto(1);
   };
 
   const getBase64 = (file) => {
@@ -78,9 +83,20 @@ export default function CreateBook() {
       window.location.href = "/";
     }
   }, []);
+
+  useEffect(() => {
+    if (book) {
+      //   alert(JSON.stringify(book));
+      setName(book.name);
+      setPrice(book.price);
+      if (book.cover_photo)
+        setFileSelected("/storage" + book.cover_photo.split("public")[1]);
+    }
+  }, [book]);
+
   return (
     <>
-      <div className="bg-white m-2 p-2 flex justify-between shadow">
+      {/* <div className="bg-white m-2 p-2 flex justify-between shadow">
         <div>
           <h1 className="text-2xl text-center m-2 font-bold">Create Book</h1>
         </div>
@@ -90,15 +106,16 @@ export default function CreateBook() {
             handleClick={() => window.history.back()}
           />
         </div>
-      </div>
+      </div> */}
       <div className="flex flex-col justify-center items-center gap-4 mt-8">
-        <div className="w-8/12 md:w-4/12 bg-gray-50 p-4">
+        <div className="w-8/12 md:w-8/12 bg-gray-50 p-4">
           <div className="m-2 mb-6">
             <label className="text-black">Name</label>
             <TextField
               classes={"p-6 my-2"}
               placeholder={"Name.."}
               handleChange={handleNameChange}
+              value={name}
             />
           </div>
 
@@ -109,6 +126,7 @@ export default function CreateBook() {
               placeholder={"Price.."}
               type="number"
               handleChange={handlePriceChange}
+              value={price}
             />
           </div>
           <div className="m-2 text-center">
@@ -169,7 +187,7 @@ export default function CreateBook() {
             <br />
             <BasicButton
               disabled={!name || !fileSelected}
-              title={"Create"}
+              title={"Update"}
               classes={"p-6 w-9/12 mt-4"}
               handleClick={addBook}
             />

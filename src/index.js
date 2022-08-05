@@ -4,6 +4,9 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "tw-elements";
+
+<script src="https://js.stripe.com/v3/" type="text/javascript" />;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

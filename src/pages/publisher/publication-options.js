@@ -2,6 +2,7 @@ import TextField from "../../components/inputs/text-input";
 import BasicButton from "../../components/buttons/basic-button";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { isAdmin } from "../../Utils/helpers";
 import axios from "axios";
 export default function PublicationOptions() {
   const [name, setName] = useState("");
@@ -9,6 +10,12 @@ export default function PublicationOptions() {
   const [publications, setPublications] = useState([]);
 
   let { userId } = useParams();
+
+  useEffect(() => {
+    if (!isAdmin()) {
+      window.location.href = "/";
+    }
+  }, []);
 
   return (
     <>

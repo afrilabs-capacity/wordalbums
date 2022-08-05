@@ -2,12 +2,16 @@ import TextField from "../../../components/inputs/text-input";
 import BasicButton from "../../../components/buttons/basic-button";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { isAdmin } from "../../../Utils/helpers";
+import EditBookModal from "../../../modals/edit-book-modal";
 import axios from "axios";
 import Publishers from "..";
 export default function Books() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [publication, setPublication] = useState();
+  const [showEditBookModal, setShowEditBookModal] = useState(false);
+  const [currEditingBook, setCurrEditingBook] = useState();
 
   let { userId } = useParams();
   let { seriesId } = useParams();
@@ -27,12 +31,41 @@ export default function Books() {
       });
   };
 
+  const showEditBookBox = () => {};
+
+  const hideBookEditModal = () => {
+    setShowEditBookModal(false);
+  };
+
+  const showBookEditModal = (book) => {
+    setCurrEditingBook(book);
+    setShowEditBookModal(true);
+  };
+
+  const deleteBook = (book) => {
+    const url = "/api/book/delete/" + book.uuid;
+    axios
+      .delete(url)
+      .then((response) => {
+        if (response.status == 200) {
+          getPublication();
+        }
+      })
+      .catch((error) => {
+        alert(error.message);
+        console.error("There was an error!", error);
+      });
+  };
+
   useEffect(() => {
     getPublication();
+    if (!isAdmin()) {
+      window.location.href = "/";
+    }
   }, []);
   return (
     <>
-      <div className="bg-white m-2 p-2 flex md:flex-row justify-between shadow">
+      <div className="bg-white m-2 p-2 flex flex-col md:flex-row justify-center md:justify-between shadow">
         <div>
           <h1 className="text-2xl text-center font-bold">
             Series
@@ -42,7 +75,7 @@ export default function Books() {
           </h1>
         </div>
         <div>
-          <nav class="flex" aria-label="Breadcrumb">
+          <nav class="flex justify-center" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3">
               <li class="inline-flex items-center">
                 <a
@@ -128,7 +161,7 @@ export default function Books() {
           </nav>
         </div>
 
-        <div>
+        <div className="flex flex-col md:flex-row justify-center gap-4">
           <BasicButton
             title={"Go Back"}
             handleClick={() => window.history.back()}
@@ -139,7 +172,7 @@ export default function Books() {
             }`}
           >
             <BasicButton
-              classes={"bg-teal-500 hover:bg-teal-400 ml-2"}
+              classes={"bg-teal-500 hover:bg-teal-400 w-full"}
               title={"Create Book"}
               handleClick={null}
             />
@@ -151,7 +184,7 @@ export default function Books() {
         <div className="bg-white m-2 p-2 grid md:grid-cols-3 ">
           <div className="flex flex-col items-center">
             <img
-              className="w-6/12"
+              className="w-full md:w-6/12"
               src={
                 "https://wordalbums1.test/storage/" +
                 publication.cover_photo.split("public")[1]
@@ -162,28 +195,47 @@ export default function Books() {
               <p className="text-black">{publication.name}</p>
             </div>
           </div>
-          <div className="col-span-2 bg-gray-50 p-2 rounded">
+          <div className="md:col-span-2 bg-gray-50 p-2 rounded">
             <h1 className="text-black font-bold text-2xl">Books</h1>
             <hr />
-            <div className="w-8/12 md:w-10/12">
-              <div className="grid md:grid-cols-3 content-start gap-4 p-2">
+            <div className="w-full md:w-10/12">
+              <div className="relative grid grid-cols-2 md:grid-cols-3 gap-4 p-2">
                 {publication &&
-                  publication.books.map((publication) => (
-                    <a
-                      href={`/publisher/${userId}/publications/series/${seriesId}/book/${publication.id}`}
-                    >
-                      <div>
-                        <img
-                          className="w-8/12"
-                          src={
-                            "https://wordalbums1.test/storage/" +
-                            publication.cover_photo.split("public")[1]
-                          }
-                        />
-                        <p className="font-bold text-2xl">{publication.name}</p>
-                        <p className="text-gray-300">By {publication.name}</p>
+                  publication.books.map((book) => (
+                    <div className="relative p-4 shadow m-2 bg-white">
+                      <div
+                        className="bg-white rounded rounded-full bg-white p-0  right-0 absolute px-1 cursor-pointer"
+                        style={{ top: -20, right: -5 }}
+                        onClick={() => deleteBook(book)}
+                      >
+                        <i class="fa fa-times-circle text-red-500  z-50 text-2xl"></i>
                       </div>
-                    </a>
+                      <div
+                        className="rounded rounded-full bg-white p-0  right-0 absolute px-1 cursor-pointer"
+                        style={{ top: -20, right: 33 }}
+                        onClick={() => showBookEditModal(book)}
+                      >
+                        <i class="fa fa-edit text-blue-500  z-50 text-2xl"></i>
+                      </div>
+                      <a
+                        href={`/publisher/${userId}/publications/series/${seriesId}/book/${book.id}`}
+                      >
+                        <div>
+                          <img
+                            className="w-full"
+                            src={
+                              "/storage/" + book.cover_photo.split("public")[1]
+                            }
+                          />
+                          <p className="font-bold text-2xl text-center">
+                            {book.name}
+                          </p>
+                          <p className="text-gray-300 text-center">
+                            By {book.name}
+                          </p>
+                        </div>
+                      </a>
+                    </div>
                   ))}
               </div>
             </div>
@@ -200,6 +252,12 @@ export default function Books() {
           />
         </div>{" "} */}
       </div>
+      <EditBookModal
+        modalOpen={showEditBookModal}
+        hideAdModal={hideBookEditModal}
+        book={currEditingBook}
+        action={getPublication}
+      />
     </>
   );
 }
