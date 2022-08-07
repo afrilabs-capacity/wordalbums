@@ -24,8 +24,8 @@ export function isReader() {
   return false;
 }
 
-// export const API_BASE = "https://wordalbums1.test/";
-export const API_BASE = "";
+export const API_BASE = "https://wordalbums1.test/";
+// export const API_BASE = "";
 
 export function logout() {
   localStorage.removeItem("user");
