@@ -24,7 +24,7 @@ export function isReader() {
   return false;
 }
 
-export const API_BASE = "https://127.00.1:8080";
+export const API_BASE = "https://54.166.153.105:8080";
 // export const API_BASE = "";
 
 export function logout() {
