@@ -1,6 +1,7 @@
 {
   "name": "word-albums1",
   "version": "0.1.0",
+  "homepage": "/",
   "private": true,
   "dependencies": {
     "@react-pdf-viewer/core": "^3.6.0",
